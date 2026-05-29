@@ -1,0 +1,64 @@
+@baseUrl = http://localhost:5555
+@token = seu_token_aqui
+
+### Buscar tarefas sem login (Retorna as 10 seeds)
+GET {{baseUrl}}/
+
+### Criar usuário
+# @name signup
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "teste@teste.com",
+  "password": "123"
+}
+
+### Fazer Login
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste@teste.com",
+  "password": "123"
+}
+
+###
+# NOTA: Coloque o token recebido no signup/login na variável @token lá no topo para rodar as requisições abaixo!
+
+### Criar tarefa como logado
+POST {{baseUrl}}/save
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "text": "Minha tarefa pessoal",
+  "dueDate": "2026-12-31T23:59:59.000Z",
+  "completed": false
+}
+
+### Buscar tarefas como logado (Deve retornar apenas as tarefas que vc criou acima)
+GET {{baseUrl}}/
+Authorization: Bearer {{token}}
+
+### Editar tarefa logado (substitua o id abaixo pelo id da tarefa criada acima)
+POST {{baseUrl}}/update
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "_id": 11,
+  "text": "Minha tarefa pessoal Editada",
+  "dueDate": "2026-12-31T23:59:59.000Z",
+  "completed": true
+}
+
+### Deletar tarefa logado (substitua o id abaixo)
+POST {{baseUrl}}/delete
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "_id": 11
+}
