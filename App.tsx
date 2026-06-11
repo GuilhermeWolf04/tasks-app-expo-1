@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { GluestackUIProvider, Button as GluestackButton, ButtonText, Input, InputField } from '@gluestack-ui/themed';
 import { gluestackUIConfig } from '@gluestack-ui/config';
 import TaskList from './src/components/TaskList';
+import EmptyState from './src/components/EmptyState';
 import { addTask, deleteTask, getAllTasks, updateTask, TaskItem } from './src/utils/handle-api';
 import { globalStyles } from './src/styles/global';
 import AboutScreen from './src/components/AboutScreen';
@@ -215,16 +216,23 @@ export default function App() {
             <Button title="Sobre o App" onPress={() => setAboutModalVisible(true)} />
           </View>
 
-          {/* TODO (Zustand): Remova as props tasks, onUpdate e onDelete após refatorar o TaskList */}
-          <TaskList 
-            tasks={tasks.filter(t => {
+          {(() => {
+            const filteredTasks = tasks.filter(t => {
               if (filter === 'completed') return t.completed;
               if (filter === 'pending') return !t.completed;
               return true;
-            })} 
-            onUpdate={updateMode} 
-            onDelete={(id) => deleteTask(id, setTasks)} 
-          />
+            });
+            if (filteredTasks.length === 0) {
+              return <EmptyState />;
+            }
+            return (
+              <TaskList
+                tasks={filteredTasks}
+                onUpdate={updateMode}
+                onDelete={(id) => deleteTask(id, setTasks)}
+              />
+            );
+          })()}
 
           {loading && (
             <View style={styles.loaderContainer}>
