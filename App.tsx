@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, Platform, StatusBar as RNStatusBar, Image, Pressable, ActivityIndicator, Modal, Button, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, Platform, Image, Pressable, ActivityIndicator, Modal, Button, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { cssInterop } from 'nativewind';
 import Checkbox from 'expo-checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import TaskList from './src/components/TaskList';
@@ -14,6 +15,8 @@ import { getToken, logout, AuthUser } from './src/utils/handle-auth';
 // TODO (Zustand): Importe o seu useTaskStore aqui
 
 type Screen = 'loading' | 'login' | 'signup' | 'main';
+
+const NativeSafeAreaView = cssInterop(SafeAreaView, { className: 'style' });
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('loading');
@@ -110,38 +113,38 @@ export default function App() {
 
   if (screen === 'loading') {
     return (
-      <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+      <NativeSafeAreaView className="flex-1 bg-gray-100 justify-center items-center">
         <ActivityIndicator size="large" color={globalStyles.primaryColor} />
-      </SafeAreaView>
+      </NativeSafeAreaView>
     );
   }
 
   if (screen === 'login') {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <NativeSafeAreaView className="flex-1 bg-gray-100">
         <LoginScreen
           onLoginSuccess={handleLoginSuccess}
           onGoToSignup={() => setScreen('signup')}
         />
         <StatusBar style="auto" />
-      </SafeAreaView>
+      </NativeSafeAreaView>
     );
   }
 
   if (screen === 'signup') {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <NativeSafeAreaView className="flex-1 bg-gray-100">
         <SignupScreen
           onSignupSuccess={handleLoginSuccess}
           onGoToLogin={() => setScreen('login')}
         />
         <StatusBar style="auto" />
-      </SafeAreaView>
+      </NativeSafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <NativeSafeAreaView className="flex-1 bg-gray-100">
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           {logoError ? (
@@ -341,16 +344,11 @@ export default function App() {
       </Modal>
 
       <StatusBar style="auto" />
-    </SafeAreaView>
+    </NativeSafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: globalStyles.backgroundColor,
-    paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0,
-  },
   container: {
     flex: 1,
     maxWidth: 600,
