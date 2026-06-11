@@ -1,6 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Feather, AntDesign } from '@expo/vector-icons';
+import { cssInterop } from 'nativewind';
+
+const NWView = cssInterop(View, { className: 'style' });
+const NWText = cssInterop(Text, { className: 'style' });
+const NWTouchableOpacity = cssInterop(TouchableOpacity, { className: 'style' });
 
 interface TaskProps {
   text: string;
@@ -10,44 +15,18 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({ text, updateMode, deleteTask }) => {
   return (
-    <View style={styles.todo}>
-      <Text style={styles.text}>{text}</Text>
-      <View style={styles.icons}>
-        <TouchableOpacity onPress={updateMode}>
-          <Feather name="edit" size={20} color="#fff" style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={deleteTask}>
-          <AntDesign name="delete" size={20} color="#fff" style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-    </View>
+    <NWView className="mt-4 flex-row items-center justify-between rounded-2xl bg-white px-4 py-4 shadow-sm shadow-black/10">
+      <NWText className="mr-4 flex-1 text-base text-gray-800">{text}</NWText>
+      <NWView className="flex-row items-center gap-4">
+        <NWTouchableOpacity className="rounded-full bg-gray-100 p-2" onPress={updateMode}>
+          <Feather name="edit" size={20} color="#111827" />
+        </NWTouchableOpacity>
+        <NWTouchableOpacity className="rounded-full bg-gray-100 p-2" onPress={deleteTask}>
+          <AntDesign name="delete" size={20} color="#111827" />
+        </NWTouchableOpacity>
+      </NWView>
+    </NWView>
   );
 };
-
-const styles = StyleSheet.create({
-  todo: {
-    backgroundColor: '#000',
-    paddingVertical: 24,
-    paddingHorizontal: 32, // Adjusted from rem
-    borderRadius: 5,
-    marginTop: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 16,
-    flex: 1,
-  },
-  icons: {
-    flexDirection: 'row',
-    gap: 16,
-    marginLeft: 16,
-  },
-  icon: {
-    padding: 2,
-  },
-});
 
 export default Task;
